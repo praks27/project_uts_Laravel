@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Blade;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 
@@ -13,9 +17,42 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
+        $search = $request->input('search');
+        $filter = $request->input('filter');
+        $data = product::with(['category']);
+        $categories = Category::get();
+
+
+        // select * from students where name like '%$search%'
+        //untuk mengecek inputan search
+        // if ($search) {
+        //     $data->where('name', 'like', "%$search%")
+        //          ->orWhere('address','like', "%$search%");
+        // }
+        if ($search) {
+            $data->where(function ($query) use ($search) {
+                $query->where('title', 'like', "%$search%")
+                      ->orWhere('status','like', "%$search%");
+            });
+        }
+
+        if($filter) {
+            $data->where(function ($query) use ($filter){
+                $query->where('category_id','=',$filter);
+            });
+        }
+
+        $data = $data->paginate(15);
+        //ditambahkan with sebelum get untuk memanggil public function major di anggota.php
+        // $data = student::with(['major'])->get();
+        return view('pages.product.list', [
+            'data' => $data,
+            'categories' => Category::get()
+
+        ]);
     }
 
     /**
@@ -25,7 +62,10 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+         //ditambahkan major untuk memanggil relasi major
+         $product = new Product();
+         $categories = Category::get();
+         return view('pages.product.form',['product' => $product,'categories' => $categories]);
     }
 
     /**
@@ -37,6 +77,15 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         //
+        $data = $request->all();
+        // dd($request->file('image')->store('product'));
+        $image = $request->file('image');
+        if ($image) {
+            $data['image'] = $image->store('images/product', 'public');
+        }
+        $data['image'] = $request->file('image')->store('images/product','public');
+        Product::create($data);
+        return redirect()->route('product.index')->with('notif','berhasil menambah data');
     }
 
     /**
@@ -59,6 +108,9 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         //
+        $categories = Category::get();
+        return view('pages.product.form',
+        ['product'=>$product,'categories'=>$categories]);
     }
 
     /**
@@ -71,6 +123,23 @@ class ProductController extends Controller
     public function update(UpdateProductRequest $request, Product $product)
     {
         //
+        $data = $request->all();
+        $image = $request->file('image');
+        // CEK APAKAH USER MENGUPLOAD FILE
+        if ($image) {
+            // cek apakah file lama ada didalam folder?
+            $exists = File::exists(storage_path('app/public/').$product->image);
+            if ($exists) {
+                // delete file lama tersebut
+                File::delete(storage_path('app/public/').$product->image);
+            }
+            // upload file baru
+            $data['image'] = $image->store('images/product', 'public');
+        }
+        $product -> update($data);
+        //untuk memanggil fungsi notif session tambahkan panah setelah kurung,lalu ketikan with
+        //untuk parameter pertama berdasarkan nama dari variabel session dan parameter kedua berisikan pesan yang akan di tampilkan
+        return redirect()->route('product.index')->with('notif','berhasil update data');
     }
 
     /**
@@ -82,5 +151,13 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         //
+        $exists = File::exists(storage_path('app/public/').$product->image);
+        if ($exists) {
+            // delete file lama tersebut
+            File::delete(storage_path('app/public/').$product->image);
+        }
+        $product->delete();
+        return redirect()->route('product.index')->with('notif','berhasil hapus data');
     }
+
 }

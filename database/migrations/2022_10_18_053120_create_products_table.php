@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('title',200);
             $table->enum('status',['active','inactive','draft']);
             $table->text('description');
-            $table->string('image',255);
+            $table->string('image',255)->nullable();
             $table->float('weight');
             $table->float('price',12,2);
             $table->timestamps();

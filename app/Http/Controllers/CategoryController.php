@@ -16,6 +16,9 @@ class CategoryController extends Controller
     public function index()
     {
         //
+        $data = Category::get();
+        return view('pages.category.list',['data' => $data]);
+
     }
 
     /**
@@ -26,6 +29,8 @@ class CategoryController extends Controller
     public function create()
     {
         //
+        $category = new Category();
+        return view('pages.category.form',['category' => $category]);
     }
 
     /**
@@ -36,7 +41,9 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
-        //
+        $data = $request->all();
+        Category::create($data);
+        return redirect('category')->with('notif','berhasil menambahkan data');
     }
 
     /**
@@ -48,6 +55,8 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         //
+        $categories = $category->load(['products']);
+        return view('pages.category.list-category',compact('categories'));
     }
 
     /**
@@ -59,6 +68,7 @@ class CategoryController extends Controller
     public function edit(Category $category)
     {
         //
+        return view('pages.category.form', ['category' => $category]);
     }
 
     /**
@@ -70,7 +80,13 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        //
+        //untuk menampilkan value dari databse
+        $data = $request->all();
+        //untuk menyimpan data setelah update
+        $category -> update($data);
+        //untuk memanggil fungsi notif session tambahkan panah setelah kurung,lalu ketikan with
+        //untuk parameter pertama berdasarkan nama dari variabel session dan parameter kedua berisikan pesan yang akan di tampilkan
+        return redirect('category')->with('notif','berhasil update data');
     }
 
     /**
@@ -81,6 +97,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        //untuk menghapus data
+        $category->delete();
+        return redirect()->route('category.index')->with('notif','berhasil delete data');
     }
 }

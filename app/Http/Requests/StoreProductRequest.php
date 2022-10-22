@@ -13,7 +13,7 @@ class StoreProductRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,15 @@ class StoreProductRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            //ketentuan input untuk table product
+            "title" => "required",
+            "status" => "required",
+            "description" => "required",
+            "image" => "image|mimes:png,jpg,jpeg|max:4000",
+            "price" => "required|numeric",
+            "weight" => "required|numeric"
+
+
         ];
     }
 }

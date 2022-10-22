@@ -13,7 +13,7 @@ class StoreCategoryRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,10 @@ class StoreCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            //ketentuan untuk table category
+            "name" => "required|max:100|unique:categories,name",
+            "description" => "required",
+            "status" => "required|in:active,inactive"
         ];
     }
 }
