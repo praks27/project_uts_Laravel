@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 
@@ -15,7 +16,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $data = Category::get();
+        // $data = Category::get();
+        $data = DB::table('categories')->paginate(5);
         return view('pages.category.list',['data' => $data]);
     }
 
