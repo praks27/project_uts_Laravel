@@ -26,7 +26,7 @@ class StoreProductRequest extends FormRequest
         return [
             //ketentuan input untuk table product
             "title" => "required",
-            "status" => "required",
+            "status" => "required|in:active,inactive,draft",
             "description" => "required",
             "image" => "image|mimes:png,jpg,jpeg|max:4000",
             "price" => "required|numeric",

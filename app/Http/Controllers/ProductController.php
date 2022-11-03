@@ -19,19 +19,12 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        //
         $search = $request->input('search');
         $filter = $request->input('filter');
         $data = product::with(['category']);
         $categories = Category::get();
 
 
-        // select * from students where name like '%$search%'
-        //untuk mengecek inputan search
-        // if ($search) {
-        //     $data->where('name', 'like', "%$search%")
-        //          ->orWhere('address','like', "%$search%");
-        // }
         if ($search) {
             $data->where(function ($query) use ($search) {
                 $query->where('title', 'like', "%$search%")
@@ -45,13 +38,10 @@ class ProductController extends Controller
             });
         }
 
-        $data = $data->paginate(15);
-        //ditambahkan with sebelum get untuk memanggil public function major di anggota.php
-        // $data = student::with(['major'])->get();
+        $data = $data->paginate(2);
         return view('pages.product.list', [
             'data' => $data,
-            'categories' => Category::get()
-
+            'categories' => $categories
         ]);
     }
 
@@ -62,7 +52,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-         //ditambahkan major untuk memanggil relasi major
+         //ditambahkan major untuk memanggil relasi categroy
          $product = new Product();
          $categories = Category::get();
          return view('pages.product.form',['product' => $product,'categories' => $categories]);
@@ -76,9 +66,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        //
         $data = $request->all();
-        // dd($request->file('image')->store('product'));
         $image = $request->file('image');
         if ($image) {
             $data['image'] = $image->store('images/product', 'public');
@@ -96,7 +84,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+
     }
 
     /**
@@ -107,7 +95,6 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
         $categories = Category::get();
         return view('pages.product.form',
         ['product'=>$product,'categories'=>$categories]);
@@ -122,7 +109,6 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        //
         $data = $request->all();
         $image = $request->file('image');
         // CEK APAKAH USER MENGUPLOAD FILE
@@ -150,7 +136,6 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
         $exists = File::exists(storage_path('app/public/').$product->image);
         if ($exists) {
             // delete file lama tersebut

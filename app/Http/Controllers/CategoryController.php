@@ -15,10 +15,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
         $data = Category::get();
         return view('pages.category.list',['data' => $data]);
-
     }
 
     /**
@@ -28,7 +26,6 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
         $category = new Category();
         return view('pages.category.form',['category' => $category]);
     }
@@ -54,7 +51,6 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
         $categories = $category->load(['products']);
         return view('pages.category.list-category',compact('categories'));
     }
@@ -67,7 +63,6 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
         return view('pages.category.form', ['category' => $category]);
     }
 

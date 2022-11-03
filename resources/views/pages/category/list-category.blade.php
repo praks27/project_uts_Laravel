@@ -2,13 +2,13 @@
 @section('content')
 
 <table class="table table-striped table-bordered">
-    <h3>jurusan {{ $categories->name }} </h3>
+    <h3>Category :  {{ $categories->name }} </h3>
     {{-- cara menggunakan count --}}
-    <h4>Jumlah Siswa :{{ $categories->products->count() }}</h4>
+    <h4>Jumlah Product :{{ $categories->products->count() }}</h4>
     <thead class="table-dark">
       <tr>
         <th scope="col">#</th>
-        <th scope="col">Student Name</th>
+        <th scope="col">Products Name </th>
       </tr>
     </thead>
     <tbody>
