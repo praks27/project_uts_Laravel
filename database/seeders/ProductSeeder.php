@@ -18,7 +18,6 @@ class ProductSeeder extends Seeder
      */
     public function run()
     {
-        Product::truncate();
         $faker = Factory::create();
         $title = ["Mouse Logitech","Headset Razer","Headset Sades","Mouse Razer","keyboard mechanical logitech"];
         foreach($title as $key => $titles){

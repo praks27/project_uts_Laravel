@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\TransactionController;
 
 
 /*
@@ -19,6 +20,6 @@ use App\Http\Controllers\CategoryController;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-
+Route::get('/transaction', [TransactionController::class, 'store']);
 Route::resource('/product', ProductController::class);
 Route::resource('/category', CategoryController::class);

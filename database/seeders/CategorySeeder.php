@@ -16,7 +16,6 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
-        Category::truncate();
         $faker = Factory::create();
         $category = ["accessories" ,"components" ,"software" ,"Electronics"];
         foreach ($category as $key => $categories) {

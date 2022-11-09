@@ -10,14 +10,6 @@
     <div class="col-auto">
       <button type="submit" class="btn btn-outline-success">search</button>
     </div>
-    <div class="col-auto">
-        <select name="filter" id="filter" class="form-select">
-            <option selected value="">All</option>
-            @foreach ($categories as $category)
-                <option value="{{ $category->id }}" {{ request('filter') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-            @endforeach
-        </select>
-    </div>
 </div>
 
 </form>
@@ -59,7 +51,7 @@
                 <h5><span class="badge bg-danger">{{ $list->status }}</span></h5>
             @endif
         </td>
-        <td>@money($list->price)</td>
+        <td>{{ $list->price }}</td>
         <td>{{ $list->weight }}</td>
         {{-- ditambahkan name karna untuk memanggil name dari table major yang sebabnya sudah ada belongsto --}}
         <td>{{ $list->category->name }}</td>
