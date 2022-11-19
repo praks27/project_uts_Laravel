@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use Ramsey\Uuid\Uuid;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\DB;
@@ -39,20 +40,22 @@ class TransactionController extends Controller
      */
     public function store(StoreTransactionRequest $request)
     {
-        //
+        //script untuk insert ke banyak table tetapi semua inputan harus berhasil jika error maka inputan tidak akan di input ke database
         DB::beginTransaction();
             try {
                 $product = [1,2,3,4,5];
                     $transaction = Transaction::create([
+                    'id' => Uuid::uuid4()->toString(),
                     'customer'=>'gombloh',
                     'total_amount' => 10000
             ]);
             $transactiondetail = [];
             foreach ($product as $key => $value){
                 $transactionDetails[] = [
+                    'id' => Uuid::uuid4()->toString(),
                     'transaction_id' => $transaction->id,
                     'product_id' => $value,
-                    'quantity' => "test",
+                    'quantity' => 1000,
                     'amount' => 1000,
                     'created_at' => Carbon::now()
                 ];
@@ -64,7 +67,7 @@ class TransactionController extends Controller
             return "ok";
         } catch (\Throwable $th) {
             DB::rollback();
-            return "gagal";
+            return $th;
         }
 
     }

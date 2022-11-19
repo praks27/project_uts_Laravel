@@ -16,8 +16,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        // $data = Category::get();
-        $data = DB::table('categories')->paginate(5);
+        $data = Category::paginate(5);
+        // $data = DB::table('categories')->paginate(5);
         return view('pages.category.list',['data' => $data]);
     }
 
