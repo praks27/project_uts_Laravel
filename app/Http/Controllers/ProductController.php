@@ -39,7 +39,7 @@ class ProductController extends Controller
         }
 
         $data = $data->paginate(2);
-        return view('pages.product.list', [
+        return view('admin.pages.product.list', [
             'data' => $data,
             'categories' => $categories
         ]);
@@ -55,7 +55,7 @@ class ProductController extends Controller
          //ditambahkan major untuk memanggil relasi categroy
          $product = new Product();
          $categories = Category::get();
-         return view('pages.product.form',['product' => $product,'categories' => $categories]);
+         return view('admin.pages.product.form',['product' => $product,'categories' => $categories]);
     }
 
     /**
@@ -96,7 +96,7 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = Category::get();
-        return view('pages.product.form',
+        return view('admin.pages.product.form',
         ['product'=>$product,'categories'=>$categories]);
     }
 

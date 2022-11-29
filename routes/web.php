@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
@@ -17,9 +18,14 @@ use App\Http\Controllers\TransactionController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', function () {
+    return view('welcome');
+});
 Route::get('/transaction', [TransactionController::class, 'store']);
 Route::resource('/product', ProductController::class);
 Route::resource('/category', CategoryController::class);
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/example', [App\Http\Controllers\ExampleController::class, 'example'])->name('dashboard');

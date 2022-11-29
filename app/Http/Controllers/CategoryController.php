@@ -16,9 +16,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $data = Category::paginate(5);
+        $data = Category::paginate(2);
         // $data = DB::table('categories')->paginate(5);
-        return view('pages.category.list',['data' => $data]);
+        return view('admin.pages.category.list',['data' => $data]);
     }
 
     /**
@@ -29,7 +29,7 @@ class CategoryController extends Controller
     public function create()
     {
         $category = new Category();
-        return view('pages.category.form',['category' => $category]);
+        return view('admin.pages.category.form',['category' => $category]);
     }
 
     /**
@@ -54,7 +54,7 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         $categories = $category->load(['products']);
-        return view('pages.category.list-category',compact('categories'));
+        return view('admin.pages.category.list-category',compact('categories'));
     }
 
     /**
@@ -65,7 +65,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        return view('pages.category.form', ['category' => $category]);
+        return view('admin.pages.category.form', ['category' => $category]);
     }
 
     /**
