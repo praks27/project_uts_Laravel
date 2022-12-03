@@ -15,10 +15,7 @@
         </div>
         <div class="info">
           <a href="#" class="d-block">
-            @auth
                 {{ auth()->user()->name }}
-            @endauth
-            Alexander
           </a>
         </div>
       </div>
@@ -55,12 +52,10 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ route('product.index') }}" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
-              <p>
-                Products
-              </p>
-            </a>
+            <form action="{{ route('logout') }}" class="d-inline" method="POST">
+                @csrf
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
           </li>
         </ul>
       </nav>

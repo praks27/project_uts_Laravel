@@ -22,10 +22,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/transaction', [TransactionController::class, 'store']);
-Route::resource('/product', ProductController::class);
-Route::resource('/category', CategoryController::class);
+
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/example', [App\Http\Controllers\ExampleController::class, 'example'])->name('dashboard');
+Route::group(['middleware'=>'auth'] , function(){
+    Route::resource('/product', ProductController::class);
+    Route::resource('/category', CategoryController::class);
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/example', [App\Http\Controllers\ExampleController::class, 'example'])->name('dashboard');
+});
+
+
+Auth::routes();

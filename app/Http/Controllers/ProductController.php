@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Blade;
 use App\Http\Requests\StoreProductRequest;
@@ -52,6 +53,9 @@ class ProductController extends Controller
      */
     public function create()
     {
+        if(!Auth::user()->hasPermissionTo('form product')){
+            return redirect()->route('product.index')->with('notif','tidak ada access');
+        }
          //ditambahkan major untuk memanggil relasi categroy
          $product = new Product();
          $categories = Category::get();
@@ -95,6 +99,9 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
+        if(!Auth::user()->hasPermissionTo('form product')){
+            return redirect()->route('product.index')->with('notif','tidak ada access');
+        }
         $categories = Category::get();
         return view('admin.pages.product.form',
         ['product'=>$product,'categories'=>$categories]);

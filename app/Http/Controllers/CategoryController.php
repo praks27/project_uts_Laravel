@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 
@@ -28,6 +29,9 @@ class CategoryController extends Controller
      */
     public function create()
     {
+        if(!Auth::user()->hasPermissionTo('form category')){
+            return redirect()->route('category.index')->with('notif','tidak ada access');
+        }
         $category = new Category();
         return view('admin.pages.category.form',['category' => $category]);
     }
@@ -65,6 +69,9 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
+        if(!Auth::user()->hasPermissionTo('form category')){
+            return redirect()->route('category.index')->with('notif','tidak ada access');
+        }
         return view('admin.pages.category.form', ['category' => $category]);
     }
 
