@@ -24,9 +24,9 @@ Route::get('/', function () {
 Route::get('/transaction', [TransactionController::class, 'store']);
 
 
-Auth::routes(['verify' => true]);
+Auth::routes();
 
-Route::group(['middleware'=>['auth','verified']] , function(){
+Route::group(['middleware'=>['auth']] , function(){
     Route::resource('/product', ProductController::class);
     Route::resource('/category', CategoryController::class);
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

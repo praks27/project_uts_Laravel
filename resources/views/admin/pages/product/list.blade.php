@@ -49,7 +49,7 @@
                                             <tr>
                                                 {{-- untuk generate nomer urut otomatis --}}
                                                 <th scope="row">
-                                                    {{ ($data->currentPage() - 1) * $data->perPage() + $loop->iteration }}
+                                                    {{ $loop->iteration }}
                                                 </th>
                                                 {{-- untuk memanggil data dari database dan di tampilkan --}}
                                                 <td>{{ $list->title }}</td>
@@ -97,7 +97,7 @@
                                         </tr>
                                     </tfoot>
                                 </table>
-                                {{ $data->withQueryString()->links() }}
+                                {{-- {{ $data->withQueryString()->links() }} --}}
                             </div>
                             <!-- /.card-body -->
                         </div>
