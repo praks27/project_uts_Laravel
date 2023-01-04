@@ -3,15 +3,16 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use Midtrans\Snap;
+use Midtrans\Config;
 use Ramsey\Uuid\Uuid;
 use App\Models\Product;
 use App\Models\Checkout;
-use Midtrans\Snap;
-use Midtrans\Config;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -46,7 +47,8 @@ class CheckoutController extends Controller
                 'address' => '',
             ],
         ];
-        $data = Cache::get('checkout', $checkout);
+        $key = 'checkout:'.Auth::user()->id;
+        $data = Cache::get($key, $checkout);
         $temp = null;
         if (isset($data['products'][$productID])) {
             $temp = [
@@ -61,7 +63,7 @@ class CheckoutController extends Controller
         }
         $data['products'][$productID] = $temp;
 
-        Cache::put('checkout', $data);
+        Cache::put($key, $data);
         return redirect()->back();
     }
 
@@ -109,7 +111,7 @@ class CheckoutController extends Controller
                 TransactionDetail::insert($transactionDetails);
             }
             $paymentUrl = $this->createInvoice($transaction);
-            cache()->flush();
+            Cache::forget($key);
             DB::commit();
             return redirect()->route('checkout.index')->with([
                 Alert::html('apakah yakin anda ingin melanjutkan pembayaran ?',
@@ -191,7 +193,8 @@ class CheckoutController extends Controller
 
     public function chart()
     {
-        $data = Cache::get('checkout');
+        $key = 'checkout:'.Auth::user()->id;
+        $data = Cache::get($key);
         $id = [];
         $qty = [];
         $prices = [];
