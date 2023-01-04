@@ -15,6 +15,11 @@
     <link rel="stylesheet" href="/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+    {{-- sweet alert --}}
+    <script src="sweetalert2.min.js"></script>
+    <script src="sweetalert2.all.min.js"></script>  
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -30,10 +35,35 @@
         @include('admin.includes.navbar')
         {{-- sidebar --}}
         @include('admin.includes.sidebar')
+        
 
-        {{-- content --}}
-        @yield('content')
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1>Data {{ basename(Request::url()) }}</h1>
+                        </div>
+                    </div>
+                </div><!-- /.container-fluid -->
+            </section>
 
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        {{-- content --}}
+                        @yield('content')
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+        </div>
+
+@include('admin.includes.footer')
 
         <!-- Control Sidebar -->
         <aside class="control-sidebar control-sidebar-dark">
@@ -47,6 +77,8 @@
     <!-- ./wrapper -->
 
     <!-- REQUIRED SCRIPTS -->
+    {{-- sweet alerts --}}
+   
     <!-- jQuery -->
     <script src="/plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap -->
@@ -69,6 +101,8 @@
     <script src="/dist/js/demo.js"></script>
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="/dist/js/pages/dashboard2.js"></script>
+    {{-- sweet alerts --}}
+    @include('sweetalert::alert')
 </body>
 
 </html>

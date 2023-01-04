@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Blade;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use Illuminate\Support\Facades\Cache;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ProductController extends Controller
 {
@@ -76,7 +77,9 @@ class ProductController extends Controller
         }
         $data['image'] = $request->file('image')->store('images/product','public');
         Product::create($data);
-        return redirect()->route('product.index')->with('notif','berhasil menambah data');
+        return redirect()->route('product.index')->with([
+            Alert::success('Data Berhasil Ditambahakan')
+        ]);
     }
 
     /**

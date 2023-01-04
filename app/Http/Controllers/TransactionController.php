@@ -9,6 +9,7 @@ use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
+use App\Models\Product;
 
 class TransactionController extends Controller
 {
@@ -20,6 +21,8 @@ class TransactionController extends Controller
     public function index()
     {
         //
+        $data = Transaction::all();
+        return view('admin.pages.transaction.list', ['data' => $data]);
     }
 
     /**
@@ -42,34 +45,33 @@ class TransactionController extends Controller
     {
         //script untuk insert ke banyak table tetapi semua inputan harus berhasil jika error maka inputan tidak akan di input ke database
         DB::beginTransaction();
-            try {
-                $product = [1,2,3,4,5];
-                    $transaction = Transaction::create([
-                    'id' => Uuid::uuid4()->toString(),
-                    'customer'=>'gombloh',
-                    'total_amount' => 10000
+        try {
+            $product = [1, 2, 3, 4, 5];
+            $transaction = Transaction::create([
+                'id' => Uuid::uuid4()->toString(),
+                'customer' => 'gombloh',
+                'total_amount' => 10000,
             ]);
             $transactiondetail = [];
-            foreach ($product as $key => $value){
+            foreach ($product as $key => $value) {
                 $transactionDetails[] = [
                     'id' => Uuid::uuid4()->toString(),
                     'transaction_id' => $transaction->id,
                     'product_id' => $value,
                     'quantity' => 1000,
                     'amount' => 1000,
-                    'created_at' => Carbon::now()
+                    'created_at' => Carbon::now(),
                 ];
             }
-            if ($transactionDetails){
+            if ($transactionDetails) {
                 TransactionDetail::insert($transactionDetails);
             }
             DB::commit();
-            return "ok";
+            return 'ok';
         } catch (\Throwable $th) {
             DB::rollback();
             return $th;
         }
-
     }
 
     /**
@@ -80,7 +82,13 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
-        //
+        // $transaction = $transaction->load(['details','product'])->get();
+        $id = $transaction->id;
+        $details = TransactionDetail::where('transaction_id', $id)->with(['product'])->get();
+        return view('admin.pages.transaction.detail',
+        ['details' => $details,
+        'transaction'=>$transaction
+    ]);
     }
 
     /**

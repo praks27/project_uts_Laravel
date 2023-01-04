@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->uuid('id');
             $table->string("customer",100);
+            $table->text("address");
+            $table->string("email",150);
             $table->float("total_amount",12,2);
             $table->timestamps();
         });
