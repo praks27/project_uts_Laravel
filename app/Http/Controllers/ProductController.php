@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Blade;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use Illuminate\Support\Facades\Cache;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ProductController extends Controller
 {
@@ -22,27 +24,25 @@ class ProductController extends Controller
     {
         $search = $request->input('search');
         $filter = $request->input('filter');
-        $data = product::with(['category']);
-        $categories = Category::get();
 
+        $data = Cache::remember('all-products', 60, function () use($search, $filter){
+            $data = product::with(['category']);
+            if ($search) {
+                $data->where(function ($query) use ($search) {
+                    $query->where('title', 'like', "%$search%")
+                          ->orWhere('status','like', "%$search%");
+                });
+            }
 
-        if ($search) {
-            $data->where(function ($query) use ($search) {
-                $query->where('title', 'like', "%$search%")
-                      ->orWhere('status','like', "%$search%");
-            });
-        }
-
-        if($filter) {
-            $data->where(function ($query) use ($filter){
-                $query->where('category_id','=',$filter);
-            });
-        }
-
-        $data = $data->paginate(2);
-        return view('admin.pages.product.list', [
-            'data' => $data,
-            'categories' => $categories
+            if($filter) {
+                $data->where(function ($query) use ($filter){
+                    $query->where('category_id','=',$filter);
+                });
+            }
+            return $data->get();
+        });
+        return view('admin.pages.product.list', compact('data'), [
+            'title' => 'list products'
         ]);
     }
 
@@ -77,7 +77,9 @@ class ProductController extends Controller
         }
         $data['image'] = $request->file('image')->store('images/product','public');
         Product::create($data);
-        return redirect()->route('product.index')->with('notif','berhasil menambah data');
+        return redirect()->route('product.index')->with([
+            Alert::success('Data Berhasil Ditambahakan')
+        ]);
     }
 
     /**

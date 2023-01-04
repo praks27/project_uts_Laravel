@@ -56,7 +56,8 @@
                     <td>{{ $list->category->name }}</td>
                     <td><img src="/storage/{{ $list->image }}" class="img-thumbnail" width="200px" height="200px"></td>
                     <td>
-                        <a href="{{ route('product.edit', ['product' => $list->id]) }}" class="btn btn-warning">Edit</a>
+                        <a href="{{ route('prod
+                        uct.edit', ['product' => $list->id]) }}" class="btn btn-warning">Edit</a>
                         {{-- untuk hapus data di table --}}
                         <form action="{{ route('product.destroy', ['product' => $list->id]) }}" class="d-inline"
                             method="POST">

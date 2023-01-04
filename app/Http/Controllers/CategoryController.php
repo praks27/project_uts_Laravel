@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class CategoryController extends Controller
 {
@@ -46,7 +47,9 @@ class CategoryController extends Controller
     {
         $data = $request->all();
         Category::create($data);
-        return redirect('category')->with('notif','berhasil menambahkan data');
+        return redirect()->route('category.index')->with([
+            Alert::success('data berhasil ditambahkan')
+        ]);
     }
 
     /**
